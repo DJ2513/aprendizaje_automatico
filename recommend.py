@@ -3,10 +3,10 @@ import re
 import numpy as np
 from openai import OpenAI
 
-client = OpenAI(api_key="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")
+client = OpenAI(os.environ("OPENAI_API_KEY"))
 MODEL = "text-embedding-3-small"
 INDEX_PATH = "movie_index.npz"
-PROFILE_PATH = "user_profile.npy"
+PROFILE_PATH = "profiles/user_profile.npy"
 
 GENRES = [
     "Action","Adventure","Animation","Biography","Comedy","Crime","Drama","Family","Fantasy",

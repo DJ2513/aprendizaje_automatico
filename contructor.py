@@ -2,11 +2,14 @@ import os
 import numpy as np
 import pandas as pd
 from openai import OpenAI
+from dotenv import load_dotenv
 
-client = OpenAI(api_key="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")
+load_dotenv()
+
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 MODEL = "text-embedding-3-small"
 
-CSV_PATH = "top_300_imdb_movies.csv"
+CSV_PATH = "data/top_300_imdb_movies.csv"
 OUT_PATH = "movie_index.npz"
 
 def movie_to_doc(row) -> str:

@@ -1,0 +1,6 @@
+.env
+embeding/
+profiles/
+
+.cache/
+movie_index.npz

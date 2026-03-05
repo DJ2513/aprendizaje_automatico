@@ -1,8 +1,8 @@
 import pandas as pd
 import re
 
-IN_CSV = "top_300_imdb_movies.csv"
-OUT_CSV = "top_300_imdb_movies_enriched.csv"
+IN_CSV = "data/top_300_imdb_movies.csv"
+OUT_CSV = "data/top_300_imdb_movies_enriched.csv"
 
 GENRE_ALIASES = {
     "action": ["accion", "acción", "action"],
