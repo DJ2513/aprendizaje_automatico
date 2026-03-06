@@ -1,6 +1,7 @@
 import os
 
 import streamlit as st
+import streamlit.components.v1 as components
 from dotenv import load_dotenv
 import numpy as np
 
@@ -89,6 +90,8 @@ if "visual_results" not in st.session_state:
     st.session_state["visual_results"] = None
 if "text_gpt_result" not in st.session_state:
     st.session_state["text_gpt_result"] = None
+if "active_tab" not in st.session_state:
+    st.session_state["active_tab"] = 0
 
 
 def normalize_profile():
@@ -281,6 +284,7 @@ with tab2:
             do_visual = st.form_submit_button("Analyze & Recommend", use_container_width=True)
 
     if do_visual:
+        st.session_state["active_tab"] = 1
         if uploaded_file is None:
             st.warning("Please upload an image or video first.")
         else:
@@ -335,8 +339,10 @@ with tab2:
 
         st.subheader("Recommended Movies")
         for rank, movie in enumerate(vr["movies"], 1):
+            i = int(movie["id"])
             t, y, g = movie["title"], movie["year"], movie["genres"]
             d, o, reason = movie.get("director", ""), movie.get("overview", ""), movie.get("reason", "")
+            movie_key = str(i)
 
             poster_url = None
             try:
@@ -353,6 +359,26 @@ with tab2:
                     else:
                         st.caption("No poster found")
 
+                    b1, b2, b3 = st.columns([1, 1, 1])
+                    with b1:
+                        st.markdown('<div class="btn-like">', unsafe_allow_html=True)
+                        if st.button("👍", key=f"vlike_{i}_{rank}", use_container_width=True):
+                            set_state(movie_key, 1, M[i])
+                            st.toast(f"Liked: {t} ({y})", icon="👍")
+                        st.markdown("</div>", unsafe_allow_html=True)
+                    with b2:
+                        st.markdown('<div class="btn-dislike">', unsafe_allow_html=True)
+                        if st.button("👎", key=f"vdislike_{i}_{rank}", use_container_width=True):
+                            set_state(movie_key, -1, M[i])
+                            st.toast(f"Disliked: {t} ({y})", icon="👎")
+                        st.markdown("</div>", unsafe_allow_html=True)
+                    with b3:
+                        st.markdown('<div class="btn-clear">', unsafe_allow_html=True)
+                        if st.button("↩️", key=f"vclear_{i}_{rank}", use_container_width=True):
+                            set_state(movie_key, 0, M[i])
+                            st.toast(f"Cleared: {t} ({y})", icon="↩️")
+                        st.markdown("</div>", unsafe_allow_html=True)
+
                 with right:
                     st.markdown(f"### {rank:02d}. {t} ({y})")
                     st.markdown(f"**Director:** {d if d else '—'}")
@@ -364,3 +390,14 @@ with tab2:
                         st.write(o)
     else:
         st.caption("Upload an image or video and click Analyze & Recommend.")
+
+if st.session_state["active_tab"] == 1:
+    st.session_state["active_tab"] = 2
+    components.html("""
+    <script>
+    setTimeout(function() {
+        const tabs = window.parent.document.querySelectorAll('button[data-baseweb="tab"]');
+        if (tabs.length > 1) tabs[1].click();
+    }, 50);
+    </script>
+    """, height=0)
