@@ -166,14 +166,26 @@ Clicking **Reset profile** zeroes the vector and clears all feedback for the ses
 
 ---
 
+## API Keys
+
+The app requires two API keys, configured in a `.env` file at the project root:
+
+| Variable | Purpose | Where to get it |
+|---|---|---|
+| `OPENAI_API_KEY` | Generates embeddings, powers vision analysis, and runs the GPT reranker | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
+| `TMDB_API_KEY` | Fetches movie poster images from [The Movie Database (TMDB)](https://www.themoviedb.org/) | [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api) — create a free account and request an API key |
+
+---
+
 ## Running the App
 
 ```bash
 # 1. Install dependencies
 pip install -r requirements.txt
 
-# 2. Set your OpenAI API key
-export OPENAI_API_KEY=your_key_here
+# 2. Create a .env file with your API keys
+echo "OPENAI_API_KEY=your_key_here" >> .env
+echo "TMDB_API_KEY=your_key_here" >> .env
 
 # 3. Build the vector index (only once)
 python contructor.py
